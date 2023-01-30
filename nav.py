@@ -47,6 +47,13 @@ if len(fig_selected) > 0:
             st.markdown('<br>',unsafe_allow_html=True)
             subset = df.iloc[idxs]
             p = subset.apply(lambda x: display_text(x['text'],x['title'],x['date']), axis=1)
+
+            st.download_button(
+                label = 'Download data as CSV',
+                data = subset.to_csv().encode('utf-8'),
+                file_name = 'npi_data_excerpt.csv',
+                mime = 'text/csv'
+            )
 else:
     st.write('Use the select tools in the chart above to select labeled sentences.')
 
