@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import re
 
 st.title('NPI Data Simple Search')
 
@@ -36,7 +37,23 @@ def display_text(org_index, text):
 search = st.text_input('Search for a word or phrase')
 
 if search != '':
-    search_trans = all_transcripts.loc[all_transcripts.text_clean.str.contains(f'\s{search}\s')]
+
+    if 'AND' in search:
+        s_list = search.split('AND')
+        s_list = [f'{s}|{s.lower()}' if s.istitle() else f'{s.title()}|{s}' for s in s_list]
+        loc_input = (all_transcripts.text_clean.str.contains(s_list[0])) & (all_transcripts.text_clean.str.contains(s_list[1]))
+    elif 'OR' in search:
+        s_list = search.split('OR')
+        s_list = [f'{s}|{s.lower()}' if s.istitle() else f'{s.title()}|{s}' for s in s_list]
+        loc_input = (all_transcripts.text_clean.str.contains(s_list[0])) | (all_transcripts.text_clean.str.contains(s_list[1]))
+    elif 'NOT' in search:
+        s_list = search.split('NOT')
+        s_list = [f'{s}|{s.lower()}' if s.istitle() else f'{s.title()}|{s}' for s in s_list]
+        loc_input = (all_transcripts.text_clean.str.contains(s_list[0])) & (~all_transcripts.text_clean.str.contains(s_list[1]))
+    else:
+        loc_input = all_transcripts.text_clean.str.contains(search)
+
+    search_trans = all_transcripts.loc[loc_input]
     st.write(f'There are {len(search_trans)} results for {search}.')
     st.markdown("<hr style='width: 75%;margin: auto;'>",unsafe_allow_html=True)
     search_trans['org_fname'] = search_trans[st.session_state.start:st.session_state.to_see].apply(lambda x: display_text(x['org_index'], x['text_clean']),axis=1)
