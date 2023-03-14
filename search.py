@@ -126,14 +126,14 @@ if search != '':
 
     st.download_button(
         label = 'Download data just on page this as a CSV',
-        data = search_trans.to_csv().encode('utf-8'),
+        data = search_trans[st.session_state.start:st.session_state.to_see].to_csv().encode('utf-8'),
         file_name = f'npi_data_excerpt_{search}.csv',
         mime = 'text/csv'
     )
 
     st.download_button(
         label = 'Download data just on page this as a TXT file',
-        data = ''.join([f'\n--Result #{i+1}--\n{doc}' for i, doc in enumerate(search_trans.text_clean.to_list())]).encode('utf-8'),
+        data = ''.join([f'\n--Result #{i+1}--\n{doc}' for i, doc in enumerate(search_trans[st.session_state.start:st.session_state.to_see].text_clean.to_list())]).encode('utf-8'),
         file_name = f'npi_data_excerpt_{search}.txt',
         mime = 'text/csv'
     )
