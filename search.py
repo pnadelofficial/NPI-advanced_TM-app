@@ -23,7 +23,7 @@ def get_data():
 all_transcripts, reference, all_statements, ws_reference = get_data()
 
 def escape_markdown(text):
-    MD_SPECIAL_CHARS = "\`*_{}[]()#+-.!"
+    MD_SPECIAL_CHARS = "\`*_{}[]()#+-!"
     for char in MD_SPECIAL_CHARS:
         text = text.replace(char, '').replace('\t', '').replace('\n', '')
     return text
