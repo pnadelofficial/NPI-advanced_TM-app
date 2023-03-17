@@ -26,11 +26,11 @@ all_transcripts, reference, all_statements, ws_reference = get_data()
 def escape_markdown(text):
     MD_SPECIAL_CHARS = "\`*_{}#+"
     for char in MD_SPECIAL_CHARS:
-        text = text.replace(char, '').replace('\t', '').replace('\n', '')
+        text = text.replace(char, '').replace('\t', '')#.replace('\n', '')
     return text
 
 def no_punct(word):
-    return ''.join([letter for letter in word if letter not in punctuation])
+    return ''.join([letter for letter in word if letter not in punctuation.replace('-', '')])
 
 def display_text(org_index, text, query):
     text = escape_markdown(text)
